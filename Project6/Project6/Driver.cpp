@@ -15,11 +15,10 @@ using namespace std;
 
 int screenWidth = 500;
 int screenHeight = 500;
-int lineWidth = 2;
-int radius = 220;
-int L = 250;
 
-Person *person = new Person();
+int L = 200;
+
+Person *person;
 
 void drawPerson()
 {
@@ -87,6 +86,7 @@ void initializeWindow()
 	glLoadIdentity();
 	gluOrtho2D(-L,L,-L,L);
 	
+	person = new Person();
 }//end initialize
 
 void main(int argc, char **argv)

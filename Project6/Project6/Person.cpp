@@ -21,7 +21,7 @@ void drawCirclePoint(int x, int y)
 
 void circleMidpoint()
 {
-	int radius = 12; //1 foot?
+	int radius = 60; //1 foot?
 	int x = 0;
 	int y = radius;
 
@@ -51,7 +51,13 @@ void circleMidpoint()
 
 void Person::drawSquare()
 {
-
+	glColor3f(1,1,1);
+	glBegin(GL_LINE_LOOP);
+		glVertex2f(0,0);
+		glVertex2f(0,120);
+		glVertex2f(120,120);
+		glVertex2f(120,0);
+	glEnd();
 }//end drawSquare
 
 void Person::drawHand()
@@ -64,41 +70,64 @@ void Person::drawHand()
 
 void Person::drawArm()
 {
-	drawHand();
+	glPushMatrix();
+		glPushMatrix();
+			glScalef(.25,2.5,0);
+			glCallList(squareIndex);
+		glPopMatrix();
+		glTranslatef(.125,0,0);
+		drawHand();
+	glPopMatrix();
 }//end drawArm
+
+void Person::drawFoot()
+{
+	glPushMatrix();
+		glScalef(.5,0,0);
+		glCallList(circleIndex);
+	glPopMatrix();
+}//end drawFoot
+
+void Person::drawLeg()
+{
+	glPushMatrix();
+		glPushMatrix();
+			glScalef(.5,2.5,0);
+			glCallList(squareIndex);
+		glPopMatrix();
+		glTranslatef(.5,0,0);
+		drawFoot();
+	glPopMatrix();
+}//end drawLeg
+
 
 void Person::drawPerson()
 {
 	//drawTorso();
 	//drawHead();
-	
-	circleIndex = glGenLists(1);
 
-	glNewList(circleIndex, GL_COMPILE);
-		circleMidpoint();
-	glEndList();
+	//Draw the left arm
+	drawArm();
 
-	glCallList(circleIndex);
-	//glCallList(circleIndex);
-	//drawHand();
-	//drawLeftArm();
+	//Draw the right arm
 
-	//drawLeg();
+	drawLeg();
 	//drawLeftLeg();
 
 }
 
 Person::Person()
 {
+	//Compile the basic structures, a circle & square that will have transformations applied to model the person
 	circleIndex = glGenLists(1);
 
 	glNewList(circleIndex, GL_COMPILE);
 		circleMidpoint();
 	glEndList();
 
-	/*squareIndex = glGenLists(1);
+	squareIndex = glGenLists(1);
 
 	glNewList(squareIndex, GL_COMPILE);
 		drawSquare();
-	glEndList();*/
+	glEndList();
 }//end Constructor
