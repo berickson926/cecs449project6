@@ -5,7 +5,7 @@ void drawCirclePoint(int x, int y)
 	glPointSize(.5);
 	glColor3f(1.0,1.0,1.0);
 
-	glEnable(GL_POINT_SMOOTH);
+	//glEnable(GL_POINT_SMOOTH);
 	glBegin(GL_POINTS);
 		glVertex2i(x,y);
 		glVertex2i(-x,y);
@@ -16,12 +16,12 @@ void drawCirclePoint(int x, int y)
 		glVertex2i(y,-x);
 		glVertex2i(-y,-x);
 	glEnd();
-	glDisable(GL_POINT_SMOOTH);
+	//glDisable(GL_POINT_SMOOTH);
 }//end drawCirclePoint
 
 void circleMidpoint()
 {
-	int radius = 60; //1 foot?
+	int radius = 120; //1 foot?
 	int x = 0;
 	int y = radius;
 
@@ -75,7 +75,7 @@ void Person::drawArm()
 			glScalef(.25,2.5,0);
 			glCallList(squareIndex);
 		glPopMatrix();
-		glTranslatef(.125,0,0);
+		glTranslatef(15,0,0);
 		drawHand();
 	glPopMatrix();
 }//end drawArm
@@ -83,7 +83,7 @@ void Person::drawArm()
 void Person::drawFoot()
 {
 	glPushMatrix();
-		glScalef(.5,0,0);
+		glScalef(.5,.25,0);
 		glCallList(circleIndex);
 	glPopMatrix();
 }//end drawFoot
@@ -95,26 +95,81 @@ void Person::drawLeg()
 			glScalef(.5,2.5,0);
 			glCallList(squareIndex);
 		glPopMatrix();
-		glTranslatef(.5,0,0);
+		glTranslatef(60,0,0);
 		drawFoot();
 	glPopMatrix();
 }//end drawLeg
 
+void Person::drawHead()
+{
+	glPushMatrix();
+		glScalef(.5,.5,0);
+		glCallList(circleIndex);
+	glPopMatrix();
+}//end drawHead
+
+void Person::drawTorso()
+{
+	glPushMatrix();
+		glScalef(1.25,2.5,0);
+		glCallList(squareIndex);
+	glPopMatrix();
+}//end drawTorso
 
 void Person::drawPerson()
 {
-	//drawTorso();
-	//drawHead();
+	/*
+	Draw torso
+    Draw head
+    Draw right arm
+    Draw left arm
+    Draw right leg
+    Draw left leg*/
+	//////////////////////////////////////////////////////
 
-	//Draw the left arm
-	drawArm();
+	glPushMatrix();//(0,0)
+		glPushMatrix();
+			glTranslatef(-75,0,0);//Move to center of torso bottom: -3", 0"
+			drawTorso();
+		glPopMatrix();
 
-	//Draw the right arm
+		glPushMatrix();
+			glTranslatef(0, 300, 0);//Move to top of torso, 0", 30"
+			glPushMatrix();
+				glTranslatef(0, 60, 0);//move to center of head: 0", 36"
+				drawHead();
+			glPopMatrix();
+		glPopMatrix();
 
-	drawLeg();
-	//drawLeftLeg();
+		glPushMatrix();
+			//Right arm
+			glTranslatef(150,10,0);
+			glRotatef(20,0,0,1);
+			drawArm();
+		glPopMatrix();
+		glPushMatrix();
+			//left arm
+			glScalef(-1,1,0);
+			glTranslatef(150,10,0);
+			glRotatef(20,0,0,1);
+			drawArm();
+		glPopMatrix();
+		glPushMatrix();
+			//Draw Right leg
+			glTranslatef(15, 0, 0);
+			glTranslatef(0, -300, 0);
+			drawLeg();
+		glPopMatrix();
+		glPushMatrix();
+			//Draw left leg
+			glScalef(-1,1,0);
+			glTranslatef(15, 0, 0);
+			glTranslatef(0, -300, 0);
+			drawLeg();
+		glPopMatrix();
+	glPopMatrix();
 
-}
+}//end drawPerson
 
 Person::Person()
 {

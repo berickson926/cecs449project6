@@ -16,7 +16,7 @@ using namespace std;
 int screenWidth = 500;
 int screenHeight = 500;
 
-int L = 200;
+int L = 450;
 
 Person *person;
 
@@ -25,6 +25,7 @@ void drawPerson()
 	glColor3f(1,0,0);
 	
 	
+
 	person->drawPerson();
 	glFlush();
 
@@ -49,18 +50,22 @@ void reshape(int w, int h)
 	glMatrixMode(GL_PROJECTION);				
 	glLoadIdentity();							
 
-	//glViewport(0,0,screenWidth, screenHeight);
+	glViewport(0,0,screenWidth, screenHeight);
 
 	if(screenWidth <= screenHeight)
 		gluOrtho2D(-L, L, -L/aspect, L/aspect);
 	else
 		gluOrtho2D(-L*aspect, L*aspect, -L, L);
 	
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
 	glutPostRedisplay();
 }//end reshape
 
 void display()
 {
+	
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClearColor(0, 0, 0, 0);	//Paint black background
 
@@ -72,8 +77,19 @@ void display()
 	//glViewport(screenWidth/2, 0, screenWidth/2, screenHeight);
 	//drawText();
 
-	glutSwapBuffers();
+	//Draw x-y axis for debugging purposes
+	/*glColor3f(1,1,1);
+	glBegin(GL_LINES);
+		glVertex2i(0, -L);
+		glVertex2i(0, L);
+	glEnd();
 
+	glBegin(GL_LINES);
+		glVertex2i(-L, 0);
+		glVertex2i(L, 0);
+	glEnd();*/
+	
+	glutSwapBuffers();
 }//end display
 
 void initializeWindow()
