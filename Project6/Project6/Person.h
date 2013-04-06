@@ -29,7 +29,11 @@ private:
 
 public:
 
+	//Constructor
 	Person();
+
+	//Pre:None
+	//Post: Draws a 2D "Person"
 	void drawPerson();
 };
 

@@ -5,7 +5,6 @@ void drawCirclePoint(int x, int y)
 	glPointSize(.5);
 	glColor3f(1.0,1.0,1.0);
 
-	//glEnable(GL_POINT_SMOOTH);
 	glBegin(GL_POINTS);
 		glVertex2i(x,y);
 		glVertex2i(-x,y);
@@ -16,12 +15,11 @@ void drawCirclePoint(int x, int y)
 		glVertex2i(y,-x);
 		glVertex2i(-y,-x);
 	glEnd();
-	//glDisable(GL_POINT_SMOOTH);
 }//end drawCirclePoint
 
 void circleMidpoint()
 {
-	int radius = 120; //1 foot?
+	int radius = 120; //Will approximate 1 foot
 	int x = 0;
 	int y = radius;
 

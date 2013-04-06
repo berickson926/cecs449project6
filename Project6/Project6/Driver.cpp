@@ -1,3 +1,19 @@
+/*
+	CECS 449 Project 6
+	Author: Bret Erickson
+	Due: 4/8/13
+	Description: Application peforms three modelling procedures. One window is created for each model.
+		
+	1. 2D model of a 'person'
+	2. Modelling of a custom stroke font with sample text that user can manipulate with keyboard input (rotate, move up/down, zoom in/out)
+	3. Modelling of predefined opengl font with sample text. User can minipulate with 2D transformations as model No. but independently in its own window.
+
+	Requires class files FontWriter & Person
+
+	TODO: refactor redundant keyboard and resize callbacks
+ */
+
+
 #include <windows.h>
 #include <gl/Gl.h>
 #include <gl/Glu.h>
@@ -12,6 +28,7 @@
 
 using namespace std;
 
+//window variables
 int screenWidth1 = 400;
 int screenHeight1 = 400;
 
@@ -21,16 +38,21 @@ int screenHeight2 = 400;
 int screenWidth3 = 400;
 int screenHeight3 = 400;
 
-int L1, L2, L3;                                       
-
-int rotateAngle, yDisplacement, rotateAngle2, yDisplacement2;
-float zoom, zoom2;                                           
-
-Person *person;                                       //Object implementation of single person rendering
-FontWriter *fontWriter;                               //Object that implements stroke font functionality
+int L1, L2, L3;  //TODO: int[] here?                                     
 
 int personWindow, strokeFontWindow, openGLFontWindow; //Window ID for context switching
 
+//2D transformation variables
+//TODO: more meaningful variables
+int rotateAngle, yDisplacement, rotateAngle2, yDisplacement2;
+float zoom, zoom2;                                           
+
+//Class object references
+Person *person;                                       //Object implementation of single person rendering
+FontWriter *fontWriter;                               //Object that implements stroke font functionality
+
+//Pre:None
+//Post:Draws
 void drawPerson()
 {
 	glColor3f(1,0,0);
@@ -39,6 +61,11 @@ void drawPerson()
 
  }//end drawPerson
 
+//Pre:ydisplacement, zoom, rotateAngle are not null
+//Post: calls fontWriter's display method and performs the following 2Dtransformations
+//		translate based on yDisplacement
+//		scale based on zoom
+//		rotate based on rotateAngle
 void drawText()
 {
 	glPushMatrix();
@@ -49,6 +76,10 @@ void drawText()
 	glPopMatrix();
 }//End drawText
 
+//Pre: integers screen width w, screen height h
+//Post: update new screenWidth, screenHeight for window 1 (person)
+//		reset color bit
+//		calc aspect ratio and resize clipping window/viewport to remove distortion
 void reshapePerson(int w, int h)
 {
 	//update screen dim
@@ -76,6 +107,10 @@ void reshapePerson(int w, int h)
 	glutPostRedisplay();
 }//end reshapePerson
 
+//Pre: integers screen width w, screen height h
+//Post: update new screenWidth, screenHeight for window 2 (strokeFont)
+//		reset color bit
+//		calc aspect ratio and resize clipping window/viewport to remove distortion
 void reshapeStrokeFont(int w, int h)
 {
 	//update screen dim
@@ -103,6 +138,10 @@ void reshapeStrokeFont(int w, int h)
 	glutPostRedisplay();
 }//end reshapeStrokeFont
 
+//Pre: integers screen width w, screen height h
+//Post: update new screenWidth, screenHeight for window 3 (OpenglFont)
+//		reset color bit
+//		calc aspect ratio and resize clipping window/viewport to remove distortion
 void reshapeOpenGLFont(int w, int h)
 {
 	//update screen dim
@@ -130,6 +169,9 @@ void reshapeOpenGLFont(int w, int h)
 	glutPostRedisplay();
 }//end reshapeOpenGLFont
 
+//Pre: font const, string constant
+//Post: Writes one character from the string at a time, using the defined font to decide how to draw the characters.
+//		**hardcoded translation used to center expected output of "DDD"
 void draw_string_stroke(void *font, const char* string)
 { 
 	glPushMatrix();
@@ -139,6 +181,12 @@ void draw_string_stroke(void *font, const char* string)
 	glPopMatrix();
 }//end draw_string_stroke
 
+//Pre: yDisplacement2, zoom2, rotateAngle2 are not null
+//Post: Clear background to black. 
+//		Sets draw color to white.
+//		based on yDiscplacement2, rotateAngle2, zoom2, draws the opengl stroke font:
+//				font type Roman, text string "DDD"
+//		and performs a translation, scale and rotation on the text
 void displayOpenGLFont()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -154,21 +202,11 @@ void displayOpenGLFont()
 		draw_string_stroke(GLUT_STROKE_ROMAN, "DDD");
 	glPopMatrix();
 
-	//Draw x-y axis for debugging purposes
-	glColor3f(1,1,1);
-	glBegin(GL_LINES);
-		glVertex2i(0, -L3);
-		glVertex2i(0, L3);
-	glEnd();
-
-	glBegin(GL_LINES);
-		glVertex2i(-L3, 0);
-		glVertex2i(L3, 0);
-	glEnd();
-
 	glutSwapBuffers();
 }//end displayOpenGLFont()
 
+//Pre: None
+//Post: Clears background to black. Draws 2d person model
 void displayPerson()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -181,6 +219,8 @@ void displayPerson()
 	glutSwapBuffers();
 }//end displayPerson
 
+//Pre: None
+//Post: Clears background to default black then draws stroke font text
 void displayText()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -193,6 +233,8 @@ void displayText()
 	glutSwapBuffers();
 }//end displayText
 
+//Pre: char mapping of keyboard input, x,y coord
+//Post: Refreshes display after modifying 2D transformation variables
 void keyboard(unsigned char key, int x, int y)
 {
 	switch (key) 
@@ -241,6 +283,8 @@ void keyboard(unsigned char key, int x, int y)
 	}
 }//end keyboard
 
+//Pre: char mapping of keyboard input, x,y coord
+//Post: Refreshes display after modifying 2D transformation variables
 void keyboardOpenGLFont(unsigned char key, int x, int y)
 {
 	switch (key) 
@@ -290,7 +334,10 @@ void keyboardOpenGLFont(unsigned char key, int x, int y)
 }//end keyboardOpenGLFont
 
 //Pre: glutInit & glutInitDisplayMode must be called prior to execution
-//Post:
+//Post:Displays keyboard input format via console output.
+//		Initializes three windows: Person model, stroke font model, and opengl font model
+//		Based on context focus, user can use keyboard input to modify the translation (Y-axis only) rotation angle and zoom
+//		of the stroke font and opengel font independently from one another.
 void initialize()
 {
 	cout << "Keyboard commands: "<< endl;
@@ -307,8 +354,8 @@ void initialize()
 	//Create Two Windows, one for the Person the other for stroke font
 
 	//First Window:
+	glutInitWindowPosition(0,0);
 	personWindow = glutCreateWindow("People");
-	glutInitWindowPosition(50, 50);
 	//Register callbacks
 	glutDisplayFunc(displayPerson);
 	glutReshapeFunc(reshapePerson);

@@ -26,8 +26,12 @@ private:
 	static void drawLetter(CP *l);
 public:
 	
-	void display();
+	//Default Constructor
 	FontWriter();
+
+	//Pre:None
+	//Post:Draws predefined text centered at origin 
+	void display();
 };
 
 #endif
