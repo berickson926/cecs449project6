@@ -13,4 +13,3 @@ Description: Application peforms three modelling procedures. One window is creat
 	3. Modelling of predefined opengl font with sample text. 
        User can minipulate with 2D transformations as model No. but independently in its own window.
 
-Requires class files FontWriter & Person
